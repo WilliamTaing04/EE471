@@ -18,10 +18,6 @@ class Robot():
     def __init__(self):
         super().__init__()
 
-        self.GRIP_OPEN_DEG  = -45.0
-        self.GRIP_CLOSE_DEG = +45.0
-        self.GRIP_THRESH_DEG = 180.0
-
         # Robot Dimensions (in mm)
         self.mDim = [77, 130, 124, 126]
         self.mOtherDim = [128, 24]

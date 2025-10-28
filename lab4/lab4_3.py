@@ -60,9 +60,6 @@ def collect_data():
     try:
         for points in range(len(trajectories)):
             joint_angles[points,1:] = np.array([robot.get_ik(trajectories[points, 1:])])
-        print("IK solutions:")
-        # for i, angles in enumerate(joint_angles):
-        #     print(f"  Waypoint {i+1}: {angles}")
     except ValueError as e:
         raise ValueError(f"End-Effector Pose Unreachable: {e}")
     
