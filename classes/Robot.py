@@ -2,8 +2,8 @@
 # Skeleton Robot class for OpenManipulator-X Robot for EE 471
 
 import numpy as np
-from .OM_X_arm import OM_X_arm
-from .DX_XM430_W350 import DX_XM430_W350
+from classes.OM_X_arm import OM_X_arm
+from classes.DX_XM430_W350 import DX_XM430_W350
 import matplotlib.pyplot as plt
 
 """
@@ -270,7 +270,7 @@ class Robot(OM_X_arm):
         input: joint_angles[] (deg)
         function: returns 6x4 nparray Jacobian Matrix
     get_fwd_vel_kin(joint_angles, joint_velocities)
-        input: joint_angles[] (deg), joint_velocities[] (deg/s)
+        input: joint_angles[] (deg), joint_velocities[] (rad/s)
         function: returns 6x1 nparray of ee velocites in (mm/s) (deg/s)
      
 
@@ -679,7 +679,7 @@ class Robot(OM_X_arm):
         # Get Jacobian
         J = self.get_jacobian(joint_angles)
         # Calculate EE velocity 
-        P = J @ np.deg2rad(np.array(joint_velocities))
+        P = J @ np.array(joint_velocities)
         return np.rad2deg(P)
 
 

@@ -3,7 +3,7 @@
 # This class/file should not need to be modified in any way for EE 471
 
 import serial.tools.list_ports
-from .DX_XM430_W350 import DX_XM430_W350
+from classes.DX_XM430_W350 import DX_XM430_W350
 from dynamixel_sdk import (
     PortHandler, PacketHandler, GroupBulkWrite, GroupBulkRead,
     DXL_LOBYTE, DXL_HIBYTE, DXL_LOWORD, DXL_HIWORD
