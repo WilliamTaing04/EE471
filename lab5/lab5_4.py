@@ -2,14 +2,12 @@
 # William Taing wtaing@calpoly.edu
 # Description: for lab5 section 3&4 testing(3. Implement forward velocity kinematics in Python  4. Velocity-based motion planning in task space)
 
-
 import numpy as np
 import time
 import pickle
 from pathlib import Path
 import matplotlib.pyplot as plt
 from classes.Robot import Robot
-from classes.TrajPlanner import TrajPlanner
 
 # Directory where this file lives
 HERE = Path(__file__).parent
@@ -38,6 +36,7 @@ def collect_data():
     
     # Create robot object
     robot = Robot()
+    traj_time = 5.0 # 5 sec
     
     # Define task-space waypoints [x, y, z, alpha] in mm and degrees
     ee_poses = np.array([
@@ -52,7 +51,12 @@ def collect_data():
     print("Computing IK for waypoints...")
     joint_angles = np.zeros((len(ee_poses), 4))
     # Compute IK
-    joint_angles = robot.get_ik(ee_poses)
+    joint_angles = np.array([
+            robot.get_ik(ee_poses[0, :]),
+            robot.get_ik(ee_poses[1, :]),
+            robot.get_ik(ee_poses[2, :]),
+            robot.get_ik(ee_poses[3, :])
+        ])
     print(joint_angles)
     
     # =============================================================================
@@ -89,11 +93,15 @@ def collect_data():
     print("\nInitializing robot...")
     # TODO: Enable motors
     robot.write_motor_state(True)
-    
+    robot.write_mode('position')
+    robot.write_time(traj_time)
+
 
     # TODO: Move to starting position using position control
     print("Moving to start position...")
+
     robot.write_joints(joint_angles[0])
+    time.sleep(traj_time)
     
     
     # TODO: Switch to velocity control mode
@@ -130,14 +138,15 @@ def collect_data():
             # -----------------------------------------------------------------
             
             # TODO: Read current joint angles and velocities
-            q_deg = robot.get_joints_readings[0]  # Replace with actual reading
-            q_dot_deg = robot.get_joints_readings[1]  # Replace with actual reading
+            q_deg, q_dot_deg, currnet_ma = robot.get_joints_readings()
+            # q_deg = robot.get_joints_readings()[0]  # Replace with actual reading
+            # q_dot_deg = robot.get_joints_readings()[1]  # Replace with actual reading
             
             # TODO: Convert joint velocities from deg/s to rad/s
             q_dot_rad = np.deg2rad(q_dot_deg)  # Replace with conversion
             
             # TODO: Get current end-effector pose
-            ee_pose = robot.get_ee_pos()  # Replace with actual pose
+            ee_pose = robot.get_ee_pos(robot.get_joints_readings()[0])  # Replace with actual pose
             current_pos = ee_pose[:3]  # Extract first 3 elements (x, y, z)
             
             
@@ -161,11 +170,12 @@ def collect_data():
             
             # TODO: Scale direction by desired speed
             speed = velocity_des  # Modify if implementing slowdown
-            v_des = np.dot(velocity_des, direction)  # Replace with calculation
+            v_des = velocity_des * direction  # Replace with calculation
+
             
             # TODO: Form 6D desired velocity vector [v_x, v_y, v_z, omega_x, omega_y, omega_z]
             # Hint: Stack v_des with zeros for angular velocity
-            p_dot_des = np.vstack(v_des, np.zeros((3,1), dtype=float))  # Replace with 6x1 vector
+            p_dot_des = np.hstack((v_des, np.zeros(3, dtype=float)))  # Replace with 6x1 vector
             
             
             # -----------------------------------------------------------------
@@ -173,13 +183,13 @@ def collect_data():
             # -----------------------------------------------------------------
             
             # TODO: Get Jacobian at current configuration
-            J = robot.get_jacobian(robot.get_joints_readings[0])  # Replace with Jacobian
+            J = robot.get_jacobian(robot.get_joints_readings()[0])  # Replace with Jacobian
             
             # TODO: Compute pseudo-inverse of Jacobian
             J_pinv = np.linalg.pinv(J)  # Replace with pseudo-inverse
             
             # TODO: Compute required joint velocities (rad/s)
-            q_dot_cmd_rad = np.dot(J_pinv, p_dot_des)  # Replace with calculation
+            q_dot_cmd_rad = J_pinv * p_dot_des  # Replace with calculation
             
             # TODO: Convert joint velocities from rad/s to deg/s
             q_dot_cmd_deg = np.rad2deg(q_dot_cmd_rad)  # Replace with conversion
@@ -200,7 +210,7 @@ def collect_data():
             
             # TODO: Compute actual end-effector velocity
             # Hint: Use robot.get_fwd_vel_kin(...)
-            p_dot_actual = robot.get_fwd_vel_kin(robot.get_joints_readings[0], np.deg2rad(robot.get_joints_readings[1]))  # Replace with calculation
+            p_dot_actual = robot.get_fwd_vel_kin(q_deg, q_dot_rad)  # Replace with calculation
             
             
             # -----------------------------------------------------------------

@@ -2,8 +2,8 @@
 # Skeleton Robot class for OpenManipulator-X Robot for EE 471
 
 import numpy as np
-from classes.OM_X_arm import OM_X_arm
-from classes.DX_XM430_W350 import DX_XM430_W350
+from .OM_X_arm import OM_X_arm
+from .DX_XM430_W350 import DX_XM430_W350
 import matplotlib.pyplot as plt
 
 """
