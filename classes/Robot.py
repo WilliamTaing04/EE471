@@ -266,6 +266,10 @@ class Robot(OM_X_arm):
     get_ik(eepose):
         input: eepose[] (mm, deg)
         function: returns 4x1 nparray of joint angles(eblow up) calculated from inverse kinematics given eepose
+    get_jacobian(joint_angles):
+        input: joint_angles[] (deg)
+        function: returns 6x4 nparray Jacobian Matrix 
+
 
     """
 
@@ -627,6 +631,45 @@ class Robot(OM_X_arm):
             return np.rad2deg((np.array(joint_angles[1])))      
         else:
             raise ValueError("Invalid Pose: Joint Angles Outside Physical Limits")
+    
+    def get_jacobian(self, joint_angles):
+        # Calculate Ai matrices
+        A_stack = self.get_int_mat(joint_angles)
+        # Calculate Ti matrices
+        T1 = A_stack[0]
+        T2 = T1 @ A_stack[1]
+        T3 = T2 @ A_stack[2]
+        T4 = T3 @ A_stack[3]
+        # Slice Zi and Oi
+        Z0 = np.transpose(np.array([0, 0, 1]))
+        Z1 = T1[0:3, 2]
+        Z2 = T2[0:3, 2]
+        Z3 = T3[0:3, 2]
+        O0 = np.transpose(np.array([0, 0, 0]))
+        O1 = T1[0:3, 3]
+        O2 = T2[0:3, 3]
+        O3 = T3[0:3, 3]
+        O4 = T4[0:3, 3]
+
+        # Calculate J
+        J = np.zeros((6,4), dtype=float)
+        J1 = np.zeros((6,1), dtype=float)
+        J2 = np.zeros((6,1), dtype=float)
+        J3 = np.zeros((6,1), dtype=float)
+        J4 = np.zeros((6,1), dtype=float)
+
+
+        J1[0:3, 0] = np.transpose(np.cross(Z0, O4 - O0))
+        J1[3:6, 0] = Z0
+        J2[0:3, 0] = np.cross(Z1, O4 - O1)
+        J2[3:6, 0] = Z1
+        J3[0:3, 0] = np.cross(Z2, O4 - O2)
+        J3[3:6, 0] = Z2
+        J4[0:3, 0] = np.cross(Z3, O4 - O3)
+        J4[3:6, 0] = Z3
+
+        J = np.hstack((J1, J2, J3, J4))
+        return J
 
 
 
