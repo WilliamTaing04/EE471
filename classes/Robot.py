@@ -268,7 +268,11 @@ class Robot(OM_X_arm):
         function: returns 4x1 nparray of joint angles(eblow up) calculated from inverse kinematics given eepose
     get_jacobian(joint_angles):
         input: joint_angles[] (deg)
-        function: returns 6x4 nparray Jacobian Matrix 
+        function: returns 6x4 nparray Jacobian Matrix
+    get_fwd_vel_kin(joint_angles, joint_velocities)
+        input: joint_angles[] (deg), joint_velocities[] (deg/s)
+        function: returns 6x1 nparray of ee velocites in (mm/s) (deg/s)
+     
 
 
     """
@@ -670,6 +674,15 @@ class Robot(OM_X_arm):
 
         J = np.hstack((J1, J2, J3, J4))
         return J
+    
+    def get_fwd_vel_kin(self, joint_angles, joint_velocities):
+        # Get Jacobian
+        J = self.get_jacobian(joint_angles)
+        # Calculate EE velocity 
+        P = J @ np.deg2rad(np.array(joint_velocities))
+        return np.rad2deg(P)
+
+
 
 
 
