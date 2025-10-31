@@ -247,6 +247,9 @@ class Robot(OM_X_arm):
     def plot_alpha_posvelacc_list(t_list, ee_pose_list, title):
         inputL time list, eepose, list, title
         function: plot position, velocity, and acceleration over time for alpha
+    plot_ee_velocity_list(t_list, ee_velocity_list, title):
+        input: eepose list, title
+        funciton: 2x2 plot, 1-3  xyz vs time plots, 4 angle vs time plot
     
     get_dh_row_mat(row):
         input: row[theta, d, a, alpha]
@@ -273,7 +276,6 @@ class Robot(OM_X_arm):
         input: joint_angles[] (deg), joint_velocities[] (rad/s)
         function: returns 6x1 nparray of ee velocites in (mm/s) (deg/s)
      
-
 
     """
 
@@ -482,6 +484,49 @@ class Robot(OM_X_arm):
         plt.tight_layout()
         plt.show()
 
+    def plot_ee_velocity_list(t_list, ee_velocity_list, title):
+        # Convert lists to arrays
+        t_list = np.array(t_list)
+        ee_velocity_list = np.array(ee_velocity_list)
+
+        # Slice x, y, z, alpha
+        vx = ee_velocity_list[:,0]
+        vy = ee_velocity_list[:,1]
+        vz = ee_velocity_list[:,2]
+        valpha = ee_velocity_list[:,4]
+        
+        # End-effector velocity vs time 
+        fig, axs = plt.subplots(2,2)    # create subplots
+        # Plot vx
+        axs[0,0].plot(t_list, vx)
+        axs[0,0].set_title("X velocity vs time")
+        # axs[0,0].set_ylim(-350,350)
+        axs[0,0].set_xlabel("Time (s)")
+        axs[0,0].set_ylabel("X Velocity (mm/s)")
+        # Plot vy
+        axs[0,1].plot(t_list, vy)
+        axs[0,1].set_title("Y velocity vs time")
+        # axs[0,1].set_ylim(-350,350)
+        axs[0,1].set_xlabel("Time (s)")
+        axs[0,1].set_ylabel("Y Velocity (mm/s)")
+        # Plot vz
+        axs[1,0].plot(t_list, vz)
+        axs[1,0].set_title("Z velocity vs time")
+        # axs[1,0].set_ylim(-350,350)
+        axs[1,0].set_xlabel("Time (s)")
+        axs[1,0].set_ylabel("Z Velocity (mm/s)")
+        # Plot valpha
+        axs[1,1].plot(t_list, valpha)
+        axs[1,1].set_title("velocity vs time")
+        # axs[1,1].set_ylim(-100,100)
+        axs[1,1].set_xlabel("Time (s)")
+        axs[1,1].set_ylabel("Pitch Velocity (deg/s)")
+        # Open plot
+        fig.suptitle(title)
+        plt.tight_layout()
+        plt.show()
+
+
 
     def get_dh_row_mat(self, row):
         """
@@ -680,7 +725,7 @@ class Robot(OM_X_arm):
         J = self.get_jacobian(joint_angles)
         # Calculate EE velocity 
         P = J @ np.array(joint_velocities)
-        return np.rad2deg(P)
+        return P
 
 
 

@@ -138,15 +138,14 @@ def collect_data():
             # -----------------------------------------------------------------
             
             # TODO: Read current joint angles and velocities
-            q_deg, q_dot_deg, currnet_ma = robot.get_joints_readings()
-            # q_deg = robot.get_joints_readings()[0]  # Replace with actual reading
-            # q_dot_deg = robot.get_joints_readings()[1]  # Replace with actual reading
+            q_deg, q_dot_deg, current_ma = robot.get_joints_readings()
+            
             
             # TODO: Convert joint velocities from deg/s to rad/s
             q_dot_rad = np.deg2rad(q_dot_deg)  # Replace with conversion
             
             # TODO: Get current end-effector pose
-            ee_pose = robot.get_ee_pos(robot.get_joints_readings()[0])  # Replace with actual pose
+            ee_pose = robot.get_ee_pos(q_deg)  # Replace with actual pose
             current_pos = ee_pose[:3]  # Extract first 3 elements (x, y, z)
             
             
@@ -183,17 +182,16 @@ def collect_data():
             # -----------------------------------------------------------------
             
             # TODO: Get Jacobian at current configuration
-            J = robot.get_jacobian(robot.get_joints_readings()[0])  # Replace with Jacobian
+            J = robot.get_jacobian(q_deg)  # Replace with Jacobian
             
             # TODO: Compute pseudo-inverse of Jacobian
             J_pinv = np.linalg.pinv(J)  # Replace with pseudo-inverse
             
             # TODO: Compute required joint velocities (rad/s)
-            q_dot_cmd_rad = J_pinv * p_dot_des  # Replace with calculation
+            q_dot_cmd_rad = J_pinv @ p_dot_des  # Replace with calculation
             
             # TODO: Convert joint velocities from rad/s to deg/s
             q_dot_cmd_deg = np.rad2deg(q_dot_cmd_rad)  # Replace with conversion
-            
             
             # -----------------------------------------------------------------
             # STEP 5: SEND VELOCITY COMMAND TO ROBOT
@@ -276,14 +274,42 @@ def collect_data():
     
     print("Data saved successfully!")
 
+
 def plot_data():
     """
     Load data and create required plots.
     """
+    data = load_from_pickle("lab5_4_data.pkl")
+    time_pkl = data["time"]
+    angles_pkl = data["joint_angles"]
+    angles_velocities_pkl = data["joint_velocities"]
+    ee_pose_pkl = data["ee_pose"]
+    ee_velocities_pkl = data["ee_velocities"]
+
+    # Convert rad/s to deg/s
+    ee_velocities_pkl_deg = np.rad2deg(ee_velocities_pkl[:, 3:])
+    ee_velocities_pkl[:, 3:] = ee_velocities_pkl_deg
+
+    np.set_printoptions(precision=3, suppress=1)    # set print precision and suppression
+    print(ee_velocities_pkl)
+
+    # 3D trajectory
+    Robot.plot_3D_trajectory_list(Robot, ee_pose_pkl,  "3D Trajectory")
+
+    # Joint angles
+    Robot.plot_angle_list(time_pkl, angles_pkl, "Motor Angle vs Time")
+
+    # End-effector pose vs time
+    Robot.plot_ee_pose_list(Robot, time_pkl, ee_pose_pkl,"End-effector pose vs time")
+
+    # # End-effector velocity vs time
+    Robot.plot_ee_velocity_list(time_pkl, ee_velocities_pkl,"End-effector velocity vs time")
     
+
 
 if __name__ == "__main__":
     # Run data collection
     collect_data()
+    
     # Plot data
     plot_data()
