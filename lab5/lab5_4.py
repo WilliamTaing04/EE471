@@ -271,7 +271,6 @@ def collect_data():
     
     # TODO: Write dictionary to pickle file
     save_to_pickle(data_dict, filename)
-    
     print("Data saved successfully!")
 
 
@@ -290,7 +289,6 @@ def plot_data():
     ee_velocities_pkl_deg = np.rad2deg(ee_velocities_pkl[:, 3:])
     ee_velocities_pkl[:, 3:] = ee_velocities_pkl_deg
 
-
     # 3D trajectory
     Robot.plot_3D_trajectory_list(Robot, ee_pose_pkl,  "3D Trajectory")
 
@@ -307,7 +305,7 @@ def plot_data():
 
 if __name__ == "__main__":
     # Run data collection
-    # collect_data()
+    collect_data()
     
     # Plot data
     plot_data()
