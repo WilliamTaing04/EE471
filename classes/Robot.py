@@ -250,6 +250,9 @@ class Robot(OM_X_arm):
     plot_ee_velocity_list(t_list, ee_velocity_list, title):
         input: eepose list, title
         funciton: 2x2 plot, 1-3  xyz vs time plots, 4 angle vs time plot
+    plot_angle_velocity_list(t_list, angles_velocity_list, title):
+        input: angles velocities list, title
+        funciton: 2x2 plot of joint angles velocities vs time 
     
     get_dh_row_mat(row):
         input: row[theta, d, a, alpha]
@@ -285,21 +288,21 @@ class Robot(OM_X_arm):
         angles_array = np.array(a_list)
 
         fig, axs = plt.subplots(2,2)    # create subplots
-        # Plot motor 1
+        # Plot joint 1
         axs[0,0].plot(t_array, angles_array[:,0])
-        axs[0,0].set_title("Motor 1")
+        axs[0,0].set_title("Joint 1")
         #axs[0,0].set_xlim(0,25)
-        # Plot motor 2
+        # Plot joint 2
         axs[0,1].plot(t_array, angles_array[:,1])
-        axs[0,1].set_title("Motor 2")
+        axs[0,1].set_title("Joint 2")
         #axs[0,1].set_xlim(0,25)
-        # Plot motor 3
+        # Plot joint 3
         axs[1,0].plot(t_array, angles_array[:,2])
-        axs[1,0].set_title("Motor 3")
+        axs[1,0].set_title("Joint 3")
         #axs[1,0].set_xlim(0,25)
-        # Plot motor 4
+        # Plot joint 4
         axs[1,1].plot(t_array, angles_array[:,3])
-        axs[1,1].set_title("Motor 4")
+        axs[1,1].set_title("Joint 4")
         #axs[1,1].set_xlim(0,25)
         # Open plot
         fig.suptitle(title)
@@ -526,6 +529,39 @@ class Robot(OM_X_arm):
         plt.tight_layout()
         plt.show()
 
+    def plot_angle_velocity_list(t_list, angles_velocity_list, title):
+        # Convert list to np array
+        t_array = np.array(t_list)
+        joint_angles_array = np.array(angles_velocity_list)
+
+        fig, axs = plt.subplots(2,2)    # create subplots
+        # Plot joint 1
+        axs[0,0].plot(t_array, joint_angles_array[:,0])
+        axs[0,0].set_title("Joint 1 Velocity")
+        #axs[0,0].set_xlim(0,25)
+        # Plot joint 2
+        axs[0,1].plot(t_array, joint_angles_array[:,1])
+        axs[0,1].set_title("Joint 2 Velocity")
+        #axs[0,1].set_xlim(0,25)
+        # Plot joint 3
+        axs[1,0].plot(t_array, joint_angles_array[:,2])
+        axs[1,0].set_title("Joint 3 Velocity")
+        #axs[1,0].set_xlim(0,25)
+        # Plot joint 4
+        axs[1,1].plot(t_array, joint_angles_array[:,3])
+        axs[1,1].set_title("Joint 4 Velocity")
+        #axs[1,1].set_xlim(0,25)
+        # Open plot
+        fig.suptitle(title)
+        for axs in axs.flat:
+            axs.set(xlabel='Time (s)', ylabel='Angle Velocity (deg/s)')
+        plt.tight_layout()
+        plt.show()
+
+
+    #----------------------------------------------------------------------------------------------#
+    #----------------------------------------------------------------------------------------------#
+    #----------------------------------------------------------------------------------------------#
 
 
     def get_dh_row_mat(self, row):
@@ -651,7 +687,7 @@ class Robot(OM_X_arm):
         cgamma = ((dw**2)+(l2**2)-(l3**2))/(2*dw*l2)
         tdelta = l22/l21
 
-        # Calculate non-motor angles
+        # Calculate non-joint angles
         mu = np.arctan2(zw, rw)
         delta = np.atan2(l22, l21)
         beta[0] = np.atan2(np.sqrt(1-cbeta**2), cbeta)

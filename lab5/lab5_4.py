@@ -294,8 +294,8 @@ def plot_data():
     # 3D trajectory
     Robot.plot_3D_trajectory_list(Robot, ee_pose_pkl,  "3D Trajectory")
 
-    # Joint angles
-    Robot.plot_angle_list(time_pkl, angles_pkl, "Motor Angle vs Time")
+    # Joint velocities
+    Robot.plot_angle_velocity_list(time_pkl, angles_velocities_pkl, "Motor Angle Velocity vs Time")
 
     # End-effector pose vs time
     Robot.plot_ee_pose_list(Robot, time_pkl, ee_pose_pkl,"End-effector pose vs time")
@@ -307,7 +307,7 @@ def plot_data():
 
 if __name__ == "__main__":
     # Run data collection
-    collect_data()
+    # collect_data()
     
     # Plot data
     plot_data()
