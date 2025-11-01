@@ -344,7 +344,7 @@ class Robot(OM_X_arm):
         x = ee_pose_list[:,0]
         y = ee_pose_list[:,1]
         z = ee_pose_list[:,2]
-        alpha = ee_pose_list[:,4]
+        alpha = ee_pose_list[:,3]
         
         # End-effector pose vs time 
         fig, axs = plt.subplots(2,2)    # create subplots
@@ -517,7 +517,7 @@ class Robot(OM_X_arm):
         axs[1,0].set_ylabel("Z Velocity (mm/s)")
         # Plot valpha
         axs[1,1].plot(t_list, valpha)
-        axs[1,1].set_title("velocity vs time")
+        axs[1,1].set_title("Alpha velocity vs time")
         # axs[1,1].set_ylim(-100,100)
         axs[1,1].set_xlabel("Time (s)")
         axs[1,1].set_ylabel("Pitch Velocity (deg/s)")

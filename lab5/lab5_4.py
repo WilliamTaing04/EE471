@@ -290,8 +290,6 @@ def plot_data():
     ee_velocities_pkl_deg = np.rad2deg(ee_velocities_pkl[:, 3:])
     ee_velocities_pkl[:, 3:] = ee_velocities_pkl_deg
 
-    np.set_printoptions(precision=3, suppress=1)    # set print precision and suppression
-    print(ee_velocities_pkl)
 
     # 3D trajectory
     Robot.plot_3D_trajectory_list(Robot, ee_pose_pkl,  "3D Trajectory")
