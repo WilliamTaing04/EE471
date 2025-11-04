@@ -265,8 +265,8 @@ def collect_data():
         'joint_angles': data_q,
         'joint_velocities': data_q_dot,
         'ee_pose': data_ee_pos,
-        'ee_velocities': data_ee_vel_actual,
-        'ee_velocities_cmd': data_ee_vel_cmd
+        'ee_velocities_cmd': data_ee_vel_cmd,
+        'ee_velocities': data_ee_vel_actual
     }
     
     # TODO: Write dictionary to pickle file
@@ -284,28 +284,46 @@ def plot_data():
     angles_velocities_pkl = data["joint_velocities"]
     ee_pose_pkl = data["ee_pose"]
     ee_velocities_pkl = data["ee_velocities"]
+    ee_velocities_cmd_pkl = data["ee_velocities_cmd"]
 
     # Convert rad/s to deg/s
     ee_velocities_pkl_deg = np.rad2deg(ee_velocities_pkl[:, 3:])
     ee_velocities_pkl[:, 3:] = ee_velocities_pkl_deg
 
-    # 3D trajectory
-    Robot.plot_3D_trajectory_list(Robot, ee_pose_pkl,  "3D Trajectory")
+    np.set_printoptions(precision=3, suppress=1)    # set print precision and suppression
 
-    # Joint velocities
-    Robot.plot_angle_velocity_list(time_pkl, angles_velocities_pkl, "Motor Angle Velocity vs Time")
+    # print(np.average(np.diff(time_pkl)))
+    
+    # Average segment velocities
+    # 0-5.5893694 ; 5.7808915-11.7324133 ; 11.8285892 (sec)
+    # 0-114 ; 120-244 ; 246-347 (index)
+    # print(ee_velocities_pkl[246:347, 0])
+    # xvel=np.average(ee_velocities_pkl[246:347, 0])
+    # yvel=np.average(ee_velocities_pkl[246:347, 1])
+    # zvel=np.average(ee_velocities_pkl[246:347, 2])
+    # vel=np.sqrt(xvel**2 + yvel**2 + zvel**2)
+    # print(vel)
+    
+    # # 3D trajectory
+    # Robot.plot_3D_trajectory_list(Robot, ee_pose_pkl,  "3D Trajectory")
 
-    # End-effector pose vs time
-    Robot.plot_ee_pose_list(Robot, time_pkl, ee_pose_pkl,"End-effector pose vs time")
+    # # Joint velocities
+    # Robot.plot_angle_velocity_list(time_pkl, angles_velocities_pkl, "Motor Angle Velocity vs Time")
 
-    # # End-effector velocity vs time
-    Robot.plot_ee_velocity_list(time_pkl, ee_velocities_pkl,"End-effector velocity vs time")
+    # # End-effector pose vs time
+    # Robot.plot_ee_pose_list(Robot, time_pkl, ee_pose_pkl,"End-effector pose vs time")
+
+    # # # End-effector velocity vs time
+    # Robot.plot_ee_velocity_list(time_pkl, ee_velocities_pkl,"End-effector velocity vs time")
+
+    
+
     
 
 
 if __name__ == "__main__":
     # Run data collection
-    collect_data()
+    # collect_data()
     
     # Plot data
     plot_data()

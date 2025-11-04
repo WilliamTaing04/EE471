@@ -743,7 +743,6 @@ class Robot(OM_X_arm):
         J3 = np.zeros((6,1), dtype=float)
         J4 = np.zeros((6,1), dtype=float)
 
-
         J1[0:3, 0] = np.transpose(np.cross(Z0, O4 - O0))
         J1[3:6, 0] = Z0
         J2[0:3, 0] = np.cross(Z1, O4 - O1)
