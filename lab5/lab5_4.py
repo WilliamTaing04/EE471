@@ -323,7 +323,7 @@ def plot_data():
 
 if __name__ == "__main__":
     # Run data collection
-    # collect_data()
+    collect_data()
     
     # Plot data
     plot_data()
