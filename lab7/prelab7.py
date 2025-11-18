@@ -3,11 +3,8 @@
 # Description: for Prelab7 7.0. PID Controller Implementation for Visual Servoing
 
 import numpy as np
-import time
-import pickle
-from pathlib import Path
 import matplotlib.pyplot as plt
-from classes.Robot import Robot
+
 
 class PIDController:
     def __init__(self, dim=3, dt=0.05):
