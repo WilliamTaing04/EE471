@@ -104,20 +104,20 @@ def main():
         # [X, Y, Z] coordinates in mm for each tag
         # Example structure (REPLACE WITH YOUR MEASUREMENTS):
         # Row 1 (tags 0-3)
-        [70,  -90, 0],   # Tag 0
-        [70,  -30, 0],   # Tag 1
-        [70,   30, 0],   # Tag 2
-        [70,   90, 0],   # Tag 3
+        [79,  -90, 0],   # Tag 0
+        [79,  -30, 0],   # Tag 1
+        [79,   30, 0],   # Tag 2
+        [79,   90, 0],   # Tag 3
         # Row 2 (tags 4-7)
-        [130, -90, 0],   # Tag 4
-        [130, -30, 0],   # Tag 5
-        [130,  30, 0],   # Tag 6
-        [130,  90, 0],   # Tag 7
+        [139, -90, 0],   # Tag 4
+        [139, -30, 0],   # Tag 5
+        [139,  30, 0],   # Tag 6
+        [139,  90, 0],   # Tag 7
         # Row 3 (tags 8-11)
-        [190, -90, 0],   # Tag 8
-        [190, -30, 0],   # Tag 9
-        [190,  30, 0],   # Tag 10
-        [190,  90, 0],   # Tag 11
+        [199, -90, 0],   # Tag 8
+        [199, -30, 0],   # Tag 9
+        [199,  30, 0],   # Tag 10
+        [199,  90, 0],   # Tag 11
     ])
     
     # Convert to 3xN format (transpose)
@@ -305,7 +305,7 @@ def main():
     # Hint: Use np.mean(), np.std(), np.max(), np.min()
     # YOUR CODE HERE
     mean_error = np.mean(error_magnitudes)  # Replace with mean
-    std_error = np.stg(error_magnitudes)  # Replace with std
+    std_error = np.std(error_magnitudes)  # Replace with std
     max_error = np.max(error_magnitudes)  # Replace with max
     min_error = np.min(error_magnitudes)  # Replace with min
     
