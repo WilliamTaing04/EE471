@@ -175,7 +175,8 @@ def main():
     print("Press 'q' to quit\n")
     
     iteration = 0
-    
+    begining_time = time.time()  # Record start time for data colleciton
+
     try:
         while True:
             # TODO: Record start time for fixed timestep enforcement
@@ -340,12 +341,12 @@ def main():
 
                 # Collect Data-----------------------------------------------------
                 if count < max_samples:
-                    data_time[count] = time.perf_counter() - start_time # Time stamps (s)
-                    data_ee_pos[count, :] = current_ee_pos              # End-effector pose [x,y,z] (mm)
-                    data_ee_pos_des[count, :] = desired_ee_pos          # Desired End-effector pose [x,y,z] (mm)
-                    data_error[count, :] = error                        # End-effector Error [ex,ey,ez] (mm)
-                    data_control_output[count, :] = velocity_cmd        # PID output [vx,vy,vz] (mm/s)
-                    data_q_dot[count, :] = joint_vel                    # Joint velocities (rad/s)
+                    data_time[count] = time.perf_counter() - begining_time  # Time stamps (s)
+                    data_ee_pos[count, :] = current_ee_pos                  # End-effector pose [x,y,z] (mm)
+                    data_ee_pos_des[count, :] = desired_ee_pos              # Desired End-effector pose [x,y,z] (mm)
+                    data_error[count, :] = error                            # End-effector Error [ex,ey,ez] (mm)
+                    data_control_output[count, :] = velocity_cmd            # PID output [vx,vy,vz] (mm/s)
+                    data_q_dot[count, :] = joint_vel                        # Joint velocities (rad/s)
                     count += 1
                 
             else:
@@ -404,7 +405,7 @@ def main():
         robot.write_velocities([0, 0, 0, 0])
         camera.stop()
         cv2.destroyAllWindows()
-        total_time = time.perf_counter() - start_time
+        total_time = time.perf_counter() - begining_time
         print(f"\nTotal execution time: {total_time:.2f} s")
         print("Done!")
 
@@ -436,15 +437,70 @@ def main():
     print("Data saved successfully!")
 
 def plots():
-    data = load_from_pickle("lab7_data_rectangle.pkl")
-    time_pkl = data["time"]
-    ee_pose_pkl = data["pos_current"]
+    # Load data from pickle files
+    data_xstep = load_from_pickle("lab7_data_Xstep.pkl")
+    data_ystep = load_from_pickle("lab7_data_Ystep.pkl")
+    data_zstep = load_from_pickle("lab7_data_Zstep.pkl")
+    data_rectangle = load_from_pickle("lab7_data_rectangle.pkl")
 
-    # 3D trajectory
-    Robot.plot_3D_trajectory_list(Robot, ee_pose_pkl,  "3D Trajectory")
+    # X step data
+    time_pkl_xstep = data_xstep["time"]
+    ee_pose_pkl_xstep = data_xstep["pos_current"]
+    ee_pose_des_pkl_xstep = data_xstep["pos_desired"]
+    error_pkl_xstep = data_xstep["error"]
+    control_output_pkl_xstep = data_xstep["control_output"]
+    joint_vel_pkl_xstep = data_xstep["joint_vel"]
+
+    # Y step data
+    time_pkl_ystep = data_ystep["time"]
+    ee_pose_pkl_ystep = data_ystep["pos_current"]
+    ee_pose_des_pkl_ystep = data_ystep["pos_desired"]
+    error_pkl_ystep = data_ystep["error"]
+    control_output_pkl_ystep = data_ystep["control_output"]
+    joint_vel_pkl_ystep = data_ystep["joint_vel"]
+
+    # Z step data
+    time_pkl_zstep = data_zstep["time"]
+    ee_pose_pkl_zstep = data_zstep["pos_current"]
+    ee_pose_des_pkl_zstep = data_zstep["pos_desired"]
+    error_pkl_zstep = data_zstep["error"]
+    control_output_pkl_zstep = data_zstep["control_output"]
+    joint_vel_pkl_zstep = data_zstep["joint_vel"]
+
+    # Rectangle data
+    time_pkl_rect = data_rectangle["time"]
+    ee_pose_pkl_rect = data_rectangle["pos_current"]
+    ee_pose_des_pkl_rect = data_rectangle["pos_desired"]
+    error_pkl_rect = data_rectangle["error"]
+    control_output_pkl_rect = data_rectangle["control_output"]
+    joint_vel_pkl_rect = data_rectangle["joint_vel"]
+
+    # Creating new time lists(recorded times are broken)
+    new_time_pkl_xstep = np.arange(0, time_pkl_xstep.size*0.05, 0.05)
+    new_time_pkl_ystep = np.arange(0, time_pkl_ystep.size*0.05, 0.05)
+    new_time_pkl_zstep = np.arange(0, time_pkl_zstep.size*0.05, 0.05)
+    new_time_pkl_rect = np.arange(0, time_pkl_rect.size*0.05, 0.05)
+
+    # EE pose actual vs desired
+    # Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_xstep, ee_pose_pkl_xstep, ee_pose_des_pkl_xstep, "Xstep Desired vs Actual Position")
+    # Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_ystep, ee_pose_pkl_ystep, ee_pose_des_pkl_ystep, "Ystep Desired vs Actual Position")
+    # Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_zstep, ee_pose_pkl_zstep, ee_pose_des_pkl_zstep, "Zstep Desired vs Actual Position")
+
+    # EE error vs time
+    # Robot.plot_ee_pose_error_list(Robot, new_time_pkl_xstep, error_pkl_xstep, 5, "Xstep Error vs Time (5mm SSE)")
+    # Robot.plot_ee_pose_error_list(Robot, new_time_pkl_ystep, error_pkl_ystep, 5, "Ystep Error vs Time (5mm SSE)")
+    # Robot.plot_ee_pose_error_list(Robot, new_time_pkl_zstep, error_pkl_zstep, 5, "Zstep Error vs Time (5mm SSE)")
+
+    # Control Output vs time
+    # Robot.plot_control_output_list(Robot, new_time_pkl_xstep, control_output_pkl_xstep, "Xstep Control Output vs Time")
+    # Robot.plot_control_output_list(Robot, new_time_pkl_ystep, control_output_pkl_ystep, "Ystep Control Output vs Time")
+    # Robot.plot_control_output_list(Robot, new_time_pkl_zstep, control_output_pkl_zstep, "Zstep Control Output vs Time")
+
+    # Joint Velocities TODO:
+
 
 if __name__ == "__main__":
-    main()
+    # main()
 
-    # plots()
+    plots()
     

@@ -253,6 +253,18 @@ class Robot(OM_X_arm):
     plot_angle_velocity_list(t_list, angles_velocity_list, title):
         input: angles velocities list, title
         funciton: 2x2 plot of joint angles velocities vs time 
+    plot_ee_pose_desvsacc_list(t_list, ee_pose_list, ee_pose_list_des, title):
+        input: time list, actual eepose, desired eepose, title
+        function: 3x1 plot of xyz actual overlaid with desired
+    plot_ee_pose_error_list(t_list, error_list, sse, title):
+        input: time list, error list, title
+        functtion: 3x1 plot of xyz error vs time
+    plot_control_output_list(t_list, control_output_list, title):
+        inputl time list, control output list, title
+        function: 3x1 plot of xyz control output of PID mm/s
+
+
+
     
     get_dh_row_mat(row):
         input: row[theta, d, a, alpha]
@@ -555,6 +567,118 @@ class Robot(OM_X_arm):
         fig.suptitle(title)
         for axs in axs.flat:
             axs.set(xlabel='Time (s)', ylabel='Angle Velocity (deg/s)')
+        plt.tight_layout()
+        plt.show()
+
+    def plot_ee_pose_desvsacc_list(self, t_list, ee_pose_list, ee_pose_list_des, title):
+        # Convert lists to arrays
+        t_list = np.array(t_list)
+        ee_pose_list = np.array(ee_pose_list)
+        ee_pose_list_des = np.array(ee_pose_list_des)
+
+        # Slice x, y, z, alpha
+        x = ee_pose_list[:,0]
+        y = ee_pose_list[:,1]
+        z = ee_pose_list[:,2]
+        xdes = ee_pose_list_des[:,0]
+        ydes = ee_pose_list_des[:,1]
+        zdes = ee_pose_list_des[:,2]
+        
+        # End-effector pose actual and desired vs time 
+        fig, axs = plt.subplots(3,1)    # create subplots
+        # Plot x
+        axs[0].plot(t_list, x, linestyle='-', label='actual pos')
+        axs[0].plot(t_list, xdes, linestyle='--', label='desired pos')
+        axs[0].set_title("X position vs time")
+        axs[0].set_xlabel("Time (s)")
+        axs[0].set_ylabel("X (mm)")
+        axs[0].legend(loc='upper left')
+        # Plot y
+        axs[1].plot(t_list, y, linestyle='-', label='actual pos')
+        axs[1].plot(t_list, ydes, linestyle='--', label='desired pos')
+        axs[1].set_title("Y position vs time")
+        axs[1].set_xlabel("Time (s)")
+        axs[1].set_ylabel("Y (mm)")
+        axs[1].legend(loc='upper left')
+        # Plot z
+        axs[2].plot(t_list, z, linestyle='-', label='actual pos')
+        axs[2].plot(t_list, zdes, linestyle='--', label='desired pos')
+        axs[2].set_title("Z position vs time")
+        axs[2].set_xlabel("Time (s)")
+        axs[2].set_ylabel("Z (mm)")
+        axs[2].legend(loc='upper left')
+        # Open plot
+        fig.suptitle(title)
+        plt.tight_layout()
+        plt.show()
+
+    def plot_ee_pose_error_list(self, t_list, error_list, sse, title):
+        # Convert lists to arrays
+        t_list = np.array(t_list)
+        error_list = np.array(error_list)
+
+        # Slice x, y, z
+        ex = error_list[:,0]
+        ey = error_list[:,1]
+        ez = error_list[:,2]
+        
+        # End-effector pose eror vs time 
+        fig, axs = plt.subplots(3,1)    # create subplots
+        # Plot x
+        axs[0].plot(t_list, ex)
+        axs[0].set_title("X error vs time")
+        axs[0].set_xlabel("Time (s)")
+        axs[0].set_ylabel("X (mm)")
+        axs[0].axhline(y=sse, color='r', linestyle='--', linewidth=1)
+        axs[0].axhline(y=-sse, color='r', linestyle='--', linewidth=1)
+        # Plot y
+        axs[1].plot(t_list, ey)
+        axs[1].set_title("Y error vs time")
+        axs[1].set_xlabel("Time (s)")
+        axs[1].set_ylabel("Y (mm)")
+        axs[1].axhline(y=sse, color='r', linestyle='--', linewidth=1)
+        axs[1].axhline(y=-sse, color='r', linestyle='--', linewidth=1)
+        # Plot z
+        axs[2].plot(t_list, ez)
+        axs[2].set_title("Z error vs time")
+        axs[2].set_xlabel("Time (s)")
+        axs[2].set_ylabel("Z (mm)")
+        axs[2].axhline(y=sse, color='r', linestyle='--', linewidth=1)
+        axs[2].axhline(y=-sse, color='r', linestyle='--', linewidth=1)
+        # Open plot
+        fig.suptitle(title)
+        plt.tight_layout()
+        plt.show()
+    
+    def plot_control_output_list(self, t_list, control_output_list, title):
+        # Convert lists to arrays
+        t_list = np.array(t_list)
+        control_output_list = np.array(control_output_list)
+
+        # Slice x, y, z
+        cx = control_output_list[:,0]
+        cy = control_output_list[:,1]
+        cz = control_output_list[:,2]
+        
+        # End-effector pose eror vs time 
+        fig, axs = plt.subplots(3,1)    # create subplots
+        # Plot x
+        axs[0].plot(t_list, cx)
+        axs[0].set_title("X control vs time")
+        axs[0].set_xlabel("Time (s)")
+        axs[0].set_ylabel("X vel(mm/s)")
+        # Plot y
+        axs[1].plot(t_list, cy)
+        axs[1].set_title("Y control vs time")
+        axs[1].set_xlabel("Time (s)")
+        axs[1].set_ylabel("Y vel(mm/s)")
+        # Plot z
+        axs[2].plot(t_list, cz)
+        axs[2].set_title("Z control vs time")
+        axs[2].set_xlabel("Time (s)")
+        axs[2].set_ylabel("Z vel(mm/s)")
+        # Open plot
+        fig.suptitle(title)
         plt.tight_layout()
         plt.show()
 
