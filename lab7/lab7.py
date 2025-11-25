@@ -482,21 +482,35 @@ def plots():
     new_time_pkl_rect = np.arange(0, time_pkl_rect.size*0.05, 0.05)
 
     # EE pose actual vs desired
-    # Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_xstep, ee_pose_pkl_xstep, ee_pose_des_pkl_xstep, "Xstep Desired vs Actual Position")
-    # Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_ystep, ee_pose_pkl_ystep, ee_pose_des_pkl_ystep, "Ystep Desired vs Actual Position")
-    # Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_zstep, ee_pose_pkl_zstep, ee_pose_des_pkl_zstep, "Zstep Desired vs Actual Position")
+    Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_xstep, ee_pose_pkl_xstep, ee_pose_des_pkl_xstep, "Xstep Desired vs Actual Position")
+    Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_ystep, ee_pose_pkl_ystep, ee_pose_des_pkl_ystep, "Ystep Desired vs Actual Position")
+    Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_zstep, ee_pose_pkl_zstep, ee_pose_des_pkl_zstep, "Zstep Desired vs Actual Position")
+    Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_rect, ee_pose_pkl_rect, ee_pose_des_pkl_rect, "Rectangle Desired vs Actual Position")
 
     # EE error vs time
-    # Robot.plot_ee_pose_error_list(Robot, new_time_pkl_xstep, error_pkl_xstep, 5, "Xstep Error vs Time (5mm SSE)")
-    # Robot.plot_ee_pose_error_list(Robot, new_time_pkl_ystep, error_pkl_ystep, 5, "Ystep Error vs Time (5mm SSE)")
-    # Robot.plot_ee_pose_error_list(Robot, new_time_pkl_zstep, error_pkl_zstep, 5, "Zstep Error vs Time (5mm SSE)")
+    Robot.plot_ee_pose_error_list(Robot, new_time_pkl_xstep, error_pkl_xstep, 5, "Xstep Error vs Time (5mm SSE)")
+    Robot.plot_ee_pose_error_list(Robot, new_time_pkl_ystep, error_pkl_ystep, 5, "Ystep Error vs Time (5mm SSE)")
+    Robot.plot_ee_pose_error_list(Robot, new_time_pkl_zstep, error_pkl_zstep, 5, "Zstep Error vs Time (5mm SSE)")
+    Robot.plot_ee_pose_error_list(Robot, new_time_pkl_rect, error_pkl_rect, 5, "Rectangle Error vs Time (5mm SSE)")
 
     # Control Output vs time
-    # Robot.plot_control_output_list(Robot, new_time_pkl_xstep, control_output_pkl_xstep, "Xstep Control Output vs Time")
-    # Robot.plot_control_output_list(Robot, new_time_pkl_ystep, control_output_pkl_ystep, "Ystep Control Output vs Time")
-    # Robot.plot_control_output_list(Robot, new_time_pkl_zstep, control_output_pkl_zstep, "Zstep Control Output vs Time")
+    Robot.plot_control_output_list(Robot, new_time_pkl_xstep, control_output_pkl_xstep, "Xstep Control Output vs Time")
+    Robot.plot_control_output_list(Robot, new_time_pkl_ystep, control_output_pkl_ystep, "Ystep Control Output vs Time")
+    Robot.plot_control_output_list(Robot, new_time_pkl_zstep, control_output_pkl_zstep, "Zstep Control Output vs Time")
+    Robot.plot_control_output_list(Robot, new_time_pkl_rect, control_output_pkl_rect, "Rectangle Control Output vs Time")
 
-    # Joint Velocities TODO:
+    # Joint Velocities
+    Robot.plot_angle_velocity_list(new_time_pkl_xstep, joint_vel_pkl_xstep, "Xstep Joint Velocities vs Time")
+    Robot.plot_angle_velocity_list(new_time_pkl_ystep, joint_vel_pkl_ystep, "Ystep Joint Velocities vs Time")
+    Robot.plot_angle_velocity_list(new_time_pkl_zstep, joint_vel_pkl_zstep, "Zstep Joint Velocities vs Time")
+    Robot.plot_angle_velocity_list(new_time_pkl_rect, joint_vel_pkl_rect, "Rectangle Joint Velocities vs Time")
+
+    # 3D Trajectory
+    Robot.plot_3D_trajectory_desvsacc_list(Robot, ee_pose_pkl_xstep, ee_pose_des_pkl_xstep, 50, "Xstep 3D Trajectory Actual vs Desired")
+    Robot.plot_3D_trajectory_desvsacc_list(Robot, ee_pose_pkl_ystep, ee_pose_des_pkl_ystep, 50, "Ystep 3D Trajectory Actual vs Desired")
+    Robot.plot_3D_trajectory_desvsacc_list(Robot, ee_pose_pkl_zstep, ee_pose_des_pkl_zstep, 50, "Zstep 3D Trajectory Actual vs Desired")
+    Robot.plot_3D_trajectory_desvsacc_list(Robot, ee_pose_pkl_rect, ee_pose_des_pkl_rect, 50, "Rectangle 3D Trajectory Actual vs Desired")
+
 
 
 if __name__ == "__main__":

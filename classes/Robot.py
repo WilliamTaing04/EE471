@@ -241,10 +241,10 @@ class Robot(OM_X_arm):
     plot_3D_trajectory_list(ee_pose_list, title):
         input: time list, eepose list, title
         function: plot 3D plot of xyz
-    def plot_xyz_posvelacc_list(t_list, ee_pose_list, title):
+    plot_xyz_posvelacc_list(t_list, ee_pose_list, title):
         inputL time list, eepose, list, title
         function: plot position, velocity, and acceleration over time for x, y, z
-    def plot_alpha_posvelacc_list(t_list, ee_pose_list, title):
+    plot_alpha_posvelacc_list(t_list, ee_pose_list, title):
         inputL time list, eepose, list, title
         function: plot position, velocity, and acceleration over time for alpha
     plot_ee_velocity_list(t_list, ee_velocity_list, title):
@@ -260,8 +260,11 @@ class Robot(OM_X_arm):
         input: time list, error list, title
         functtion: 3x1 plot of xyz error vs time
     plot_control_output_list(t_list, control_output_list, title):
-        inputl time list, control output list, title
+        input: time list, control output list, title
         function: 3x1 plot of xyz control output of PID mm/s
+    plot_3D_trajectory_desvsacc_list(ee_pose_list, ee_pose_list_des, start_index, title):
+        input: eepose actual list, eepose desired list, start index for marker, title
+        function: plot 3D trajectory of desired vs actual, mark start(at index), and end
 
 
 
@@ -680,6 +683,38 @@ class Robot(OM_X_arm):
         # Open plot
         fig.suptitle(title)
         plt.tight_layout()
+        plt.show()
+
+    def plot_3D_trajectory_desvsacc_list(self, ee_pose_list, ee_pose_list_des, start_index, title):
+        # Convert lists to arrays
+        ee_pose_list = np.array(ee_pose_list)
+        ee_pose_list_des = np.array(ee_pose_list_des)
+
+        # Slice x, y, z, alpha
+        x = ee_pose_list[:,0]
+        y = ee_pose_list[:,1]
+        z = ee_pose_list[:,2]
+        xdes = ee_pose_list_des[:,0]
+        ydes = ee_pose_list_des[:,1]
+        zdes = ee_pose_list_des[:,2]
+
+        fig = plt.figure()
+        ax = plt.axes(projection='3d')
+
+        # Actual trajectory start/end
+        ax.scatter(x[start_index], y[start_index], z[start_index], color='green', s=60)
+        ax.text(x[start_index], y[start_index], z[start_index], "Start", color='green')
+        ax.scatter(x[-1], y[-1], z[-1], color='red', s=60)
+        ax.text(x[-1], y[-1], z[-1], "End", color='red')
+
+        # Plot Trajectories
+        ax.plot3D(x, y, z, label="actual")
+        ax.plot3D(xdes, ydes, zdes, label="desired")
+        ax.set_title(title)
+        ax.set_xlabel('x (mm)')
+        ax.set_ylabel('y (mm)')
+        ax.set_zlabel('z (mm)')
+        ax.legend(loc='upper right')
         plt.show()
 
 
