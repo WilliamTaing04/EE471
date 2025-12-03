@@ -23,6 +23,21 @@ from classes.Robot import Robot
 from classes.Realsense import Realsense
 from classes.TrajPlanner import TrajPlanner
 
+# Directory where this file lives
+HERE = Path(__file__).parent
+
+def save_to_pickle(data: dict, filename: str):
+    """Save data dictionary to a pickle file in the same folder as this script."""
+    path = HERE / filename
+    with open(path, "wb") as f:
+        pickle.dump(data, f)
+
+def load_from_pickle(filename: str):
+    """Load data dictionary from a pickle file in the same folder as this script."""
+    path = HERE / filename
+    with open(path, "rb") as f:
+        return pickle.load(f)
+
 # ============================================================================
 # CONFIGURATION PARAMETERS
 # ============================================================================
@@ -189,7 +204,8 @@ def detect_balls(image):
     # Convert to HSV
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    # Define HSV ranges for red and blue (1°-180°)    
+    # Define HSV ranges for red and blue (1°-180°)
+    # TODO tune saturation based on ee position?
     # Red
     lower_red1 = np.array([0, 50, 50])
     upper_red1 = np.array([9, 255, 255])
@@ -202,7 +218,7 @@ def detect_balls(image):
 
     # Yellow
     lower_yellow = np.array([15, 50, 50])
-    upper_yellow = np.array([100, 255, 255])
+    upper_yellow = np.array([30, 255, 255])
 
     # Orange
     lower_orange = np.array([5, 50, 50])
@@ -355,6 +371,9 @@ def detect_balls(image):
                 # Calculate centroid
                 cx = int(M["m10"] / M["m00"])
                 cy = int(M["m01"] / M["m00"])
+
+                # Calculate radius from area
+                radius = int(np.sqrt(area / np.pi))
                 
                 # Circle
                 color = 'blue'
@@ -488,7 +507,7 @@ def detect_balls(image):
     # cv2.imshow('original', original)
     # cv2.imshow('image', image)
     # cv2.imshow('red', red_result)
-    cv2.imshow('blue', blue_result)
+    # cv2.imshow('blue', blue_result)
     # cv2.imshow('yellow', yellow_result)
     # cv2.imshow('orange', orange_result)
     # cv2.imshow('red Otsu Threshold', red_thresh_otsu)
@@ -499,19 +518,19 @@ def detect_balls(image):
     # cv2.imshow('blue contour', blue_contour_debug)
     # cv2.imshow('yellow contour', yellow_contour_debug)
     # cv2.imshow('orange contour', orange_contour_debug)
-    cv2.imshow('Detected Circles (Contours)', original)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('Detected Circles (Contours)', original)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 
     # If no circles detected, show image and return None
     if result is None or len(result[0]) == 0:
-        cv2.imshow('Detection', image)
+        cv2.imshow('Detection', original)
         cv2.waitKey(1)
         return None
     
     # Display detection results
-    cv2.imshow('Detection', image)
+    cv2.imshow('Detection', original)
     cv2.waitKey(1)
     
     return result if result else None
@@ -952,5 +971,5 @@ def test():
 
 
 if __name__ == "__main__":
-    # main()
-    test()
+    main()
+    # test()
