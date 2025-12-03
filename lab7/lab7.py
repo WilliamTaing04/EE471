@@ -481,6 +481,10 @@ def plots():
     new_time_pkl_zstep = np.arange(0, time_pkl_zstep.size*0.05, 0.05)
     new_time_pkl_rect = np.arange(0, time_pkl_rect.size*0.05, 0.05)
 
+    np.set_printoptions(precision=3, suppress=1)    # set print precision and suppression
+    # print(error_pkl_xstep.shape)
+    # print(np.sqrt(np.mean(error_pkl_xstep[50:]**2)))
+
     # EE pose actual vs desired
     Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_xstep, ee_pose_pkl_xstep, ee_pose_des_pkl_xstep, "Xstep Desired vs Actual Position")
     Robot.plot_ee_pose_desvsacc_list(Robot, new_time_pkl_ystep, ee_pose_pkl_ystep, ee_pose_des_pkl_ystep, "Ystep Desired vs Actual Position")
